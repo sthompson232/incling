@@ -12,7 +12,9 @@ import {
     SliderThumb,
     Flex,
     Badge,
-    Button
+    Button,
+    Heading,
+    Center
 } from '@chakra-ui/react'
 import {
     DeleteIcon
@@ -36,27 +38,28 @@ const Tile = ({ tile, updateData }) => {
         axiosGet(`tasks/?tile=${tile.id}`)
         .then(res => {
             setTasks(res.data.sort((a, b) => parseInt(a.order) > parseInt(b.order) ? 1 : -1));
-            setTasksLength(res.data.length - 1);
+            setTasksLength(res.data.length);
         })
     }, [tile])
 
     const resetActiveTask = () => {
         setActiveTask(0)
     }
-    
+
     return (
         <Box boxShadow="xl" p={4} h="450px">
             <Box textAlign="end">
                 <TaskForm updateData={updateData} tile={tile} />
             </Box>
+            {tasksLength > 0 ?
+            <>
             <Box h="280px">
                 <Task task={tasks[activeTask]} updateData={updateData} resetActiveTask={resetActiveTask} />
             </Box>
-            {tasksLength > 0 ?
             <Slider 
                 defaultValue={activeTask} 
                 min={0} 
-                max={tasksLength} 
+                max={tasksLength - 1} 
                 step={1} 
                 onChange={(value => setActiveTask(value))}
             >
@@ -66,8 +69,11 @@ const Tile = ({ tile, updateData }) => {
             </SliderTrack>
             <SliderThumb boxSize={6} />
             </Slider>
+            </>
             : 
-            ''
+            <Center h="280px">
+                <Heading>No Tasks in this tile!</Heading>
+            </Center>
             }
             <Flex justify='space-between'>
                 <Text fontSize='sm'>{tileDate.toLocaleDateString("en-UK")}</Text>

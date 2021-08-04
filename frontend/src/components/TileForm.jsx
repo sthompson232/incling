@@ -87,6 +87,7 @@ const TileForm = ({ updateData, updateInstance, tile }) => {
                         onChange={e => {setStatus(e.target.value)}}
                         maxWidth="300px"
                         placeholder="Select a status"
+                        defaultValue={updateInstance && status}
                     >
                             <option value="Archived">Archived</option>
                             <option value="Pending">Pending</option>

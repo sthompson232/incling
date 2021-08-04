@@ -33,7 +33,7 @@ const TaskForm = ({ updateData, updateInstance, task, tile }) => {
     const [title, setTitle] = useState(updateInstance ? task.title : '')
     const [order, setOrder] = useState(updateInstance ? task.order : 0)
     const [description, setDescription] = useState(updateInstance ? task.description : '')
-    const [taskType, setTaskType] = useState(updateInstance ? task.taskType : '')
+    const [taskType, setTaskType] = useState(updateInstance ? task.task_type : '')
     const [formCompleted, setFormCompleted] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [submitting, setSubmitting] = useState(false)
@@ -44,7 +44,7 @@ const TaskForm = ({ updateData, updateInstance, task, tile }) => {
             setOrder(task.order)
             setDescription(task.description)
             setOrder(task.order)
-            setTaskType(task.taskType)
+            setTaskType(task.task_type)
         }
     }, [task])
 
@@ -140,7 +140,7 @@ const TaskForm = ({ updateData, updateInstance, task, tile }) => {
                         onChange={e => {setTaskType(e.target.value)}}
                         maxWidth="300px"
                         placeholder="Select a task type"
-                        value={taskType}
+                        defaultValue={updateInstance && taskType}
                     >
                             <option value="Survey">Survey</option>
                             <option value="Discussion">Discussion</option>
