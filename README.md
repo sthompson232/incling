@@ -1,7 +1,7 @@
 # incling
 
 To run: start a VE install dependancies in requirements.txt with pip install -r requirements.txt, then run django on localhost:8000, make sure you are in the backend directory
-start react with yarn start, make sure you are in the frontend directory. 
+start react with yarn install, and then yarn start, make sure you are in the frontend directory. 
 
 to continue, add security checks and safeguards in backend if it fails, check payload is correct etc and if any errors returned then they are handled on the frontend with error messages
 

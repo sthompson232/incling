@@ -14,7 +14,8 @@ import {
     Badge,
     Button,
     Heading,
-    Center
+    Center,
+    Spinner
 } from '@chakra-ui/react'
 import {
     DeleteIcon
@@ -23,6 +24,7 @@ import {
 
 const Tile = ({ tile, updateData }) => {
     const [tasks, setTasks] = useState([])
+    const [tasksLoading, setTasksLoading] = useState(true)
     const [tasksLength, setTasksLength] = useState()
     const [activeTask, setActiveTask] = useState(0)
     const tileDate = new Date(tile.launch_date)
@@ -37,8 +39,9 @@ const Tile = ({ tile, updateData }) => {
     useEffect(() => {
         axiosGet(`tasks/?tile=${tile.id}`)
         .then(res => {
-            setTasks(res.data.sort((a, b) => parseInt(a.order) > parseInt(b.order) ? 1 : -1));
-            setTasksLength(res.data.length);
+            setTasks(res.data.sort((a, b) => parseInt(a.order) > parseInt(b.order) ? 1 : -1))
+            setTasksLength(res.data.length)
+            setTasksLoading(false)
         })
     }, [tile])
 
@@ -51,7 +54,10 @@ const Tile = ({ tile, updateData }) => {
             <Box textAlign="end">
                 <TaskForm updateData={updateData} tile={tile} />
             </Box>
-            {tasksLength > 0 ?
+            {tasksLoading ?
+            <Center><Spinner size="xl" /></Center>
+            :
+            (tasksLength > 0 ?
             <>
             <Box h="280px">
                 <Task task={tasks[activeTask]} updateData={updateData} resetActiveTask={resetActiveTask} />
@@ -74,7 +80,7 @@ const Tile = ({ tile, updateData }) => {
             <Center h="280px">
                 <Heading>No Tasks in this tile!</Heading>
             </Center>
-            }
+            )}
             <Flex justify='space-between'>
                 <Text fontSize='sm'>{tileDate.toLocaleDateString("en-UK")}</Text>
                 <Badge 

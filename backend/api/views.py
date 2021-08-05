@@ -24,15 +24,18 @@ class TaskAPIView(APIView):
         task_order = request.data['order']
         task_type = request.data['taskType']
 
-        new_task = Task.objects.create(
-            tile_id = tile_id,
-            title=title,
-            description=description,
-            order=task_order,
-            task_type=task_type
-            )
-        new_task.save()
-        return Response(status=status.HTTP_200_OK)
+        if tile_id and title and description and task_order and task_type:
+            new_task = Task.objects.create(
+                tile_id = tile_id,
+                title=title,
+                description=description,
+                order=task_order,
+                task_type=task_type
+                )
+            new_task.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         task_id = request.data['taskId']
@@ -41,13 +44,16 @@ class TaskAPIView(APIView):
         task_order = request.data['order']
         task_type = request.data['taskType']
 
-        new_task = Task.objects.filter(id = task_id).update(
-            title=title,
-            description=description,
-            order=task_order,
-            task_type=task_type
-        )
-        return Response(status=status.HTTP_200_OK)
+        if task_id and title and description and task_order and task_type:
+            new_task = Task.objects.filter(id = task_id).update(
+                title=title,
+                description=description,
+                order=task_order,
+                task_type=task_type
+            )
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         task = Task.objects.get(id=request.data['taskId'])
@@ -65,20 +71,29 @@ class TileAPIView(APIView):
     def post(self, request):
         tile_status = request.data['status']
         date = datetime.datetime.fromtimestamp(int(request.data['date']) / float(1000))
-        new_tile = Tile.objects.create(status=tile_status, launch_date=date)
-        new_tile.save()
-        return Response(status=status.HTTP_200_OK)
+        if tile_status and date:
+            new_tile = Tile.objects.create(status=tile_status, launch_date=date)
+            new_tile.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         tile = Tile.objects.filter(id=request.data['tileId'])
         tile_status = request.data['status']
         date = datetime.datetime.fromtimestamp(int(request.data['date']) / float(1000))
-        tile.update(launch_date=date, status=tile_status)
-        return Response(status=status.HTTP_200_OK)
+        if tile and tile_status and date:
+            tile.update(launch_date=date, status=tile_status)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         tile = Tile.objects.get(id=request.data['tileId'])
         related_tasks = Task.objects.filter(tile__id=request.data['tileId'])
-        tile.delete()
-        related_tasks.delete()
-        return Response(status=status.HTTP_200_OK)
+        if tile and related_tasks:
+            tile.delete()
+            related_tasks.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
